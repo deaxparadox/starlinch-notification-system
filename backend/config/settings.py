@@ -35,6 +35,18 @@ JWT_REFRESH_COOKIE_SAMESITE = env.str("JWT_REFRESH_COOKIE_SAMESITE", default="No
 # Required for the refresh token to travel as a cross-domain httpOnly cookie (Vercel <-> Render).
 CORS_ALLOW_CREDENTIALS = True
 
+# --- Notification provider credentials — NOT fail-fast. These are required for a channel SEND
+# to succeed, not for the server itself to run; the admin panel and site must work with zero
+# sandbox accounts configured. Each adapter checks its own settings at send time and raises a
+# clear, logged failure if unset (see notifications/adapters/*). ---
+WHATSAPP_ACCESS_TOKEN = env.str("WHATSAPP_ACCESS_TOKEN", default=None)
+PHONE_NUMBER_ID = env.str("PHONE_NUMBER_ID", default=None)
+WHATSAPP_API_VERSION = env.str("WHATSAPP_API_VERSION", default="v22.0")
+POSTMARKAPP_TOKEN = env.str("POSTMARKAPP_TOKEN", default=None)
+POSTMARK_FROM_EMAIL = env.str("POSTMARK_FROM_EMAIL", default=None)
+ONESIGNAL_APP_ID = env.str("ONESIGNAL_APP_ID", default=None)
+ONESIGNAL_REST_API_KEY = env.str("ONESIGNAL_REST_API_KEY", default=None)
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -46,6 +58,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "accounts",
+    "notifications",
 ]
 
 MIDDLEWARE = [

@@ -9,8 +9,8 @@
 - FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers
 
 ## In-Progress
-- FEAT-20260822-1213 — Notifications core: Trigger/Template/NotificationLog/PushSubscription models, WhatsApp/Postmark/OneSignal adapters (ports & adapters pattern), fire_trigger() service layer (spec: docs/specs/FEAT-20260822-1213-notifications-core.md)
 
 ## Done
+- FEAT-20260822-1213 — Notifications core: Trigger/Template/NotificationLog/PushSubscription models, WhatsApp/Postmark/OneSignal adapters (ports & adapters pattern), fire_trigger() service layer (spec: docs/specs/FEAT-20260822-1213-notifications-core.md) [2026-08-22 18:47]
 - FEAT-20260822-1212 — Backend foundation: Django project, custom User model, JWT login/logout/refresh (access token in body, refresh token in httpOnly cookie), Docker + docker-compose for local dev (spec: docs/specs/FEAT-20260822-1212-backend-foundation.md) [2026-08-22 18:24]
 - BUG-20260822-1234 — Refresh token not invalidated on logout/refresh (session fixation risk), and logout's cookie-clear used Django's delete_cookie() which has no `secure` param and silently fails to clear a SameSite=None cookie in browsers. Found by automated security review of FEAT-20260822-1212's commit. Fixed: added rest_framework_simplejwt.token_blacklist, refresh tokens now rotate + blacklist the used token on every /refresh/ and /logout/ call, and cookie clearing uses set_cookie(max_age=0, ...) with matching flags instead of delete_cookie(). [2026-08-22 18:34]

@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from notifications.services import fire_trigger
+
 from .serializers import UserSerializer
 
 
@@ -58,6 +60,7 @@ class LoginView(APIView):
             return Response({"detail": "Invalid credentials."}, status=401)
 
         refresh = RefreshToken.for_user(user)
+        fire_trigger("login", user=user, context={"name": user.first_name or user.username})
         response = Response({"access_token": str(refresh.access_token), "user": UserSerializer(user).data})
         _set_refresh_cookie(response, str(refresh))
         return response
@@ -67,6 +70,12 @@ class LogoutView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        if request.user.is_authenticated:
+            fire_trigger(
+                "logout",
+                user=request.user,
+                context={"name": request.user.first_name or request.user.username},
+            )
         _blacklist_if_present(request.COOKIES.get(settings.JWT_REFRESH_COOKIE_NAME))
         response = Response(status=204)
         _clear_refresh_cookie(response)
