@@ -75,9 +75,18 @@ class PushSubscriptionView(APIView):
         if not player_id:
             return Response({"detail": "onesignal_player_id is required"}, status=400)
 
-        # update_or_create, not get_or_create: onesignal_player_id is globally unique. If this
-        # browser's subscription was previously tied to a different user (e.g. someone else
-        # logged in here earlier), it now belongs to whoever is subscribing now.
+        # A client-supplied player_id is untrusted input - nothing proves the requester's
+        # browser actually owns this OneSignal subscription. Refuse to reassign a subscription
+        # that already belongs to a DIFFERENT user (that would silently redirect their future
+        # notifications to this requester and break their subscription). Creating a brand-new
+        # row, or re-registering one this same user already owns, is still allowed.
+        existing = PushSubscription.objects.filter(onesignal_player_id=player_id).first()
+        if existing and existing.user_id != request.user.id:
+            return Response(
+                {"detail": "This push subscription is already registered to a different account."},
+                status=409,
+            )
+
         PushSubscription.objects.update_or_create(
             onesignal_player_id=player_id, defaults={"user": request.user}
         )
