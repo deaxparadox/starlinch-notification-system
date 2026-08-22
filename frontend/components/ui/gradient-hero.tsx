@@ -36,15 +36,19 @@ const PADDING: Record<HeroSize, string> = {
 
 export function GradientHero({
   size,
+  padded = true,
   className,
   children,
 }: {
   size: HeroSize;
+  /** Set false when the caller supplies its own padding/layout classes via `className` (e.g. a
+   * full-height centered page) instead of the default header-block padding. */
+  padded?: boolean;
   className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("relative overflow-hidden", PADDING[size], className)}>
+    <div className={cn("relative overflow-hidden", padded && PADDING[size], className)}>
       {BLOBS[size].map((blob, i) => (
         <div
           key={i}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { GradientHero } from "@/components/ui/gradient-hero";
 import { FieldError, FieldLabel, Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { subscribeToWebPush } from "@/lib/onesignal";
@@ -50,7 +51,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 p-16">
+    <GradientHero
+      size="full"
+      padded={false}
+      className="flex flex-1 flex-col items-center justify-center gap-4 p-16"
+    >
       <h1 className="text-xl font-semibold text-foreground">Login</h1>
       <Card className="w-full max-w-xs p-6">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -79,6 +84,6 @@ export default function LoginPage() {
           </Button>
         </form>
       </Card>
-    </div>
+    </GradientHero>
   );
 }

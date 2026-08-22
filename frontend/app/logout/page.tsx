@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
+import { GradientHero } from "@/components/ui/gradient-hero";
 import { useAuth } from "@/lib/auth";
 
 export default function LogoutPage() {
@@ -18,9 +19,13 @@ export default function LogoutPage() {
   }, [logout, router]);
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-2 p-16">
+    <GradientHero
+      size="full"
+      padded={false}
+      className="flex flex-1 flex-col items-center justify-center gap-2 p-16"
+    >
       <Loader2 className="size-5 animate-spin text-foreground-muted" aria-hidden />
       <p className="text-sm text-foreground-muted">Logging out…</p>
-    </div>
+    </GradientHero>
   );
 }
