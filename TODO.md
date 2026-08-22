@@ -1,10 +1,10 @@
 # TODO
 
 ## Todo
-- FEAT-20260822-2251 — New Logs page: /admin/logs using the existing GET /api/admin/logs/ endpoint
 - FEAT-20260822-2252 — Website pages redesign: home, login, logout, unauthorized restyled with the new design system
 
 ## In-Progress
+- FEAT-20260822-2251 — New Logs page: /admin/logs using the existing GET /api/admin/logs/ endpoint (spec: docs/specs/FEAT-20260822-2251-logs-page.md)
 - FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers (spec: docs/specs/FEAT-20260822-1219-readme.md)
 
 ## Done
