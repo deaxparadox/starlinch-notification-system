@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { GradientHero } from "@/components/ui/gradient-hero";
 import { FieldError, FieldLabel, Input, Textarea } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 
@@ -52,31 +53,36 @@ export default function NewTriggerPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-8">
-      <Link href="/admin/triggers" className="text-sm text-foreground-secondary hover:text-foreground">
-        ← Back to triggers
-      </Link>
-      <h1 className="text-lg font-semibold text-foreground">New trigger</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <FieldLabel>
-            Key (e.g. <code className="font-mono normal-case">login</code>)
-          </FieldLabel>
-          <Input value={key} onChange={(e) => setKey(e.target.value)} required />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <FieldLabel>Display name</FieldLabel>
-          <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <FieldLabel>Description</FieldLabel>
-          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
-        </div>
-        <FieldError>{error}</FieldError>
-        <Button type="submit" loading={submitting} className="w-fit">
-          {submitting ? "Creating…" : "Create trigger"}
-        </Button>
-      </form>
+    <div className="flex flex-1 flex-col">
+      <GradientHero size="reduced">
+        <Link href="/admin/triggers" className="text-sm text-foreground-secondary hover:text-foreground">
+          ← Back to triggers
+        </Link>
+        <h1 className="mt-2 text-[28px] font-extrabold text-foreground">New trigger</h1>
+      </GradientHero>
+
+      <div className="mx-auto w-full max-w-2xl px-12 pb-8">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>
+              Key (e.g. <code className="font-mono normal-case">login</code>)
+            </FieldLabel>
+            <Input value={key} onChange={(e) => setKey(e.target.value)} required />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>Display name</FieldLabel>
+            <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>Description</FieldLabel>
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
+          </div>
+          <FieldError>{error}</FieldError>
+          <Button type="submit" loading={submitting} className="w-fit">
+            {submitting ? "Creating…" : "Create trigger"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/badge";
+import { GradientHero } from "@/components/ui/gradient-hero";
 import { FieldLabel, Input, Textarea } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
@@ -128,14 +129,17 @@ export default function TemplateEditorPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-8">
-      <Link href="/admin/triggers" className="text-sm text-foreground-secondary hover:text-foreground">
-        ← Back to triggers
-      </Link>
-      <h1 className="text-lg font-semibold text-foreground">
-        {trigger.display_name} — {CHANNEL_LABELS[channel]}
-      </h1>
+    <div className="flex flex-1 flex-col">
+      <GradientHero size="reduced">
+        <Link href="/admin/triggers" className="text-sm text-foreground-secondary hover:text-foreground">
+          ← Back to triggers
+        </Link>
+        <h1 className="mt-2 text-[28px] font-extrabold text-foreground">
+          {trigger.display_name} — {CHANNEL_LABELS[channel]}
+        </h1>
+      </GradientHero>
 
+      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 px-12 pb-8">
       <div className="flex items-center gap-2">
         <Switch checked={isActive} onCheckedChange={handleToggle} label="Active" />
         <span className="text-sm text-foreground-secondary">Active</span>
@@ -207,6 +211,7 @@ export default function TemplateEditorPage() {
             {testResult.error && <p className="text-xs text-foreground-muted">{testResult.error}</p>}
           </div>
         )}
+      </div>
       </div>
     </div>
   );

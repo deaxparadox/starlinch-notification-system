@@ -8,6 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { ChannelBadge, StatusBadge } from "@/components/ui/badge";
 import { Dialog } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
+import { GradientHero } from "@/components/ui/gradient-hero";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth";
@@ -57,74 +58,83 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-foreground">Notification Settings</h1>
-        <Link href="/admin/triggers/new" className={buttonVariants("primary", "md")}>
-          + New trigger
-        </Link>
-      </div>
-
-      {error && <p className="text-sm text-error">{error}</p>}
-
-      {!triggers && !error && (
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
+    <div className="flex flex-1 flex-col">
+      <GradientHero size="reduced">
+        <div className="flex items-end justify-between">
+          <div>
+            <h1 className="text-[28px] font-extrabold text-foreground">Triggers</h1>
+            <p className="mt-1 text-sm text-foreground-muted">
+              {triggers ? `${triggers.length} active — ` : ""}manage what fires on each channel
+            </p>
+          </div>
+          <Link href="/admin/triggers/new" className={buttonVariants("primary", "md")}>
+            + New trigger
+          </Link>
         </div>
-      )}
+      </GradientHero>
 
-      {triggers && triggers.length === 0 && (
-        <EmptyState
-          icon={Inbox}
-          title="No triggers yet"
-          description="Create one to get started."
-          action={
-            <Link href="/admin/triggers/new" className={buttonVariants("primary", "sm")}>
-              + New trigger
-            </Link>
-          }
-        />
-      )}
+      <div className="flex flex-col gap-4 px-12 pb-8">
+        {error && <p className="text-sm text-error">{error}</p>}
 
-      {triggers && triggers.length > 0 && (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Trigger</TableHeaderCell>
-              {CHANNELS.map((c) => (
-                <TableHeaderCell key={c.key}>
-                  <ChannelBadge channel={c.key}>{c.label}</ChannelBadge>
-                </TableHeaderCell>
-              ))}
-              <TableHeaderCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {triggers.map((trigger) => (
-              <TableRow key={trigger.id}>
-                <TableCell className="font-medium">{trigger.display_name}</TableCell>
+        {!triggers && !error && (
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-9 w-full" />
+          </div>
+        )}
+
+        {triggers && triggers.length === 0 && (
+          <EmptyState
+            icon={Inbox}
+            title="No triggers yet"
+            description="Create one to get started."
+            action={
+              <Link href="/admin/triggers/new" className={buttonVariants("primary", "sm")}>
+                + New trigger
+              </Link>
+            }
+          />
+        )}
+
+        {triggers && triggers.length > 0 && (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Trigger</TableHeaderCell>
                 {CHANNELS.map((c) => (
-                  <TableCell key={c.key}>
-                    <Link href={`/admin/triggers/${trigger.id}/templates/${c.key}`}>
-                      <CellBadge trigger={trigger} channel={c.key} />
-                    </Link>
-                  </TableCell>
+                  <TableHeaderCell key={c.key}>
+                    <ChannelBadge channel={c.key}>{c.label}</ChannelBadge>
+                  </TableHeaderCell>
                 ))}
-                <TableCell>
-                  <button
-                    onClick={() => setPendingDelete(trigger)}
-                    className="text-sm font-medium text-error hover:underline"
-                  >
-                    Delete
-                  </button>
-                </TableCell>
+                <TableHeaderCell />
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+            </TableHead>
+            <TableBody>
+              {triggers.map((trigger) => (
+                <TableRow key={trigger.id}>
+                  <TableCell className="font-medium">{trigger.display_name}</TableCell>
+                  {CHANNELS.map((c) => (
+                    <TableCell key={c.key}>
+                      <Link href={`/admin/triggers/${trigger.id}/templates/${c.key}`}>
+                        <CellBadge trigger={trigger} channel={c.key} />
+                      </Link>
+                    </TableCell>
+                  ))}
+                  <TableCell>
+                    <button
+                      onClick={() => setPendingDelete(trigger)}
+                      className="text-sm font-medium text-error hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </div>
 
       <Dialog open={!!pendingDelete} onClose={() => setPendingDelete(null)} title="Delete trigger?">
         <p className="mb-4 text-sm text-foreground-secondary">
