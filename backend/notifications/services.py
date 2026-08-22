@@ -72,14 +72,28 @@ def _send_one(
 ) -> dict:
     close_old_connections()  # safe DB access from a non-request thread (Django's standard pattern)
 
-    adapter: NotificationPort = CHANNEL_ADAPTERS[template.channel]
-    recipient = override_recipient or _resolve_recipient(template.channel, user)
+    recipients = [override_recipient] if override_recipient else _resolve_recipients(template.channel, user)
 
-    if not recipient:
+    if not recipients:
         _log(template, "", "failed", is_test, error="no recipient")
         return {"status": "failed", "error": "no recipient"}
 
     message = _render(template, context)
+    errors = []
+    for recipient in recipients:
+        error = _send_to_one_recipient(template, recipient, message, is_test)
+        if error:
+            errors.append(error)
+
+    if len(errors) == len(recipients):
+        return {"status": "failed", "error": "; ".join(errors)}
+    return {"status": "sent"}
+
+
+def _send_to_one_recipient(template: Template, recipient: str, message: RenderedMessage, is_test: bool) -> str:
+    """Sends to a single recipient and logs the result. Returns an error string on failure, "" on
+    success — never raises, so one device's failure can't stop the others in the loop above."""
+    adapter: NotificationPort = CHANNEL_ADAPTERS[template.channel]
 
     # Send and log are SEPARATE try blocks, deliberately — a log-write failure must never be
     # able to overwrite a successful send's result, and must never raise unhandled from inside
@@ -91,7 +105,7 @@ def _send_one(
             "send failed channel=%s trigger=%s: %s", template.channel, template.trigger.key, e
         )
         _log(template, recipient, "failed", is_test, error=str(e))
-        return {"status": "failed", "error": str(e)}
+        return str(e)
 
     try:
         _log(template, recipient, "sent", is_test, provider_response=provider_response)
@@ -102,7 +116,7 @@ def _send_one(
             template.channel,
             log_err,
         )
-    return {"status": "sent"}
+    return ""
 
 
 def _log(template, recipient, status, is_test, provider_response=None, error=""):
@@ -130,16 +144,18 @@ def _render(template: Template, context: dict) -> RenderedMessage:
     return RenderedMessage(subject=subject, body=body)
 
 
-def _resolve_recipient(channel: str, user) -> str:
+def _resolve_recipients(channel: str, user) -> list[str]:
     """Only called for REAL trigger fires (user is not None). Test sends bypass this entirely
-    via override_recipient."""
+    via override_recipient. Web push fans out to every device the user has subscribed on —
+    email/whatsapp only ever have one recipient (the account's single email/phone number), but
+    a user can have many PushSubscription rows, one per browser/device, and a trigger should
+    notify all of them, not an arbitrary one."""
     if user is None:
-        return ""
+        return []
     if channel == "email":
-        return user.email or ""
+        return [user.email] if user.email else []
     if channel == "whatsapp":
-        return user.phone_number or ""
+        return [user.phone_number] if user.phone_number else []
     if channel == "webpush":
-        sub = user.pushsubscription_set.first()
-        return sub.onesignal_player_id if sub else ""
-    return ""
+        return list(user.pushsubscription_set.values_list("onesignal_player_id", flat=True))
+    return []
