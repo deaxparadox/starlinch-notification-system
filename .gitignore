@@ -32,3 +32,6 @@ npm-debug.log*
 
 # --- Docker ---
 *.pid
+
+# --- Brainstorming visual companion (throwaway session mockups) ---
+.superpowers/
