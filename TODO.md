@@ -1,12 +1,12 @@
 # TODO
 
 ## Todo
-- FEAT-20260822-1218 — Deployment: Django backend on Render (+ managed Postgres), Next.js frontend on Vercel, first admin user created
 - FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers
 
 ## In-Progress
 
 ## Done
+- FEAT-20260822-1218 — Deployment prep: fixed Dockerfile to bind Render's $PORT, added an entrypoint script (migrate + exec gunicorn for correct signal handling), whitenoise for static files, and a render.yaml blueprint. Scope changed after checking with user: they'll create the Render/Vercel accounts and do the actual deploy + createsuperuser themselves, using instructions in FEAT-20260822-1219's README (spec: docs/specs/FEAT-20260822-1218-deployment-prep.md) [2026-08-22 20:29]
 - FEAT-20260822-1217 — Admin panel UI: trigger x channel table, template editor, toggles, test-send button, unauthorized page (spec: docs/specs/FEAT-20260822-1217-admin-panel-ui.md) [2026-08-22 20:15]
 - FEAT-20260822-1216 — Website pages: login/logout pages that fire triggers, post-login Web Push subscribe flow (OneSignal) (spec: docs/specs/FEAT-20260822-1216-website-pages.md) [2026-08-22 19:56]
 - FEAT-20260822-1215 — Frontend foundation: Next.js app skeleton with (website) and (admin) route groups, shared API client, auth handling (spec: docs/specs/FEAT-20260822-1215-frontend-foundation.md) [2026-08-22 19:34]

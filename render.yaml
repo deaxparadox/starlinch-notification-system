@@ -1,0 +1,49 @@
+databases:
+  - name: starclinch-notifications-db
+    plan: free
+    region: oregon
+
+services:
+  - name: starclinch-backend
+    type: web
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      # Fill in once you know this service's actual onrender.com hostname (shown after first
+      # deploy) - e.g. starclinch-backend-xxxx.onrender.com,localhost,127.0.0.1
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: starclinch-notifications-db
+          property: connectionString
+      # Fill in once the Vercel frontend is deployed and you know its URL.
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: JWT_REFRESH_COOKIE_SECURE
+        value: "True"
+      - key: JWT_REFRESH_COOKIE_SAMESITE
+        value: "None"
+      # Notification provider credentials - optional, the app runs fine without them (a send
+      # just fails loudly and logs). Fill in once sandbox accounts exist.
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_API_VERSION
+        value: v22.0
+      - key: POSTMARKAPP_TOKEN
+        sync: false
+      - key: POSTMARK_FROM_EMAIL
+        sync: false
+      - key: ONESIGNAL_APP_ID
+        sync: false
+      - key: ONESIGNAL_REST_API_KEY
+        sync: false
