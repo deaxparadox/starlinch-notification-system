@@ -47,3 +47,12 @@ services:
         sync: false
       - key: ONESIGNAL_REST_API_KEY
         sync: false
+      # First admin account - no Shell access on the free tier to run `createsuperuser`
+      # interactively, so docker-entrypoint.sh creates this account itself on startup instead.
+      # Fill in once, at first deploy; safe to leave set (it won't recreate/overwrite the account).
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false

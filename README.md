@@ -35,16 +35,23 @@ username: testadmin
 password: testpass123
 ```
 
-**On the deployed instance**: there's no seeded user — create one yourself once the backend is
-live, via Render's **Shell** tab for the web service:
+**On the deployed instance**: Render's free tier has no Shell/SSH access, so there's no way to run
+`createsuperuser` interactively after deploy. Instead, set these three env vars on the Render
+service (see [Deployment](#deployment)) — `backend/docker-entrypoint.sh` creates the account
+itself the moment the container starts, before the first deploy even finishes:
 
-```bash
-python manage.py createsuperuser
+```
+DJANGO_SUPERUSER_USERNAME=
+DJANGO_SUPERUSER_EMAIL=
+DJANGO_SUPERUSER_PASSWORD=
 ```
 
-This works normally with the custom `User` model (it only adds `phone_number`/`last_seen_at` on
-top of Django's built-in fields). Use the resulting username/password to log in at `/login` on the
-frontend — a staff account gets an **Admin** link in the site nav once logged in.
+Safe to leave these set permanently — it only creates the account once (checks if the username
+already exists first) and just logs a "already exists, skipping" line on every restart after that.
+Use the resulting username/password to log in at `/login` on the frontend — a staff account gets
+an **Admin** link in the site nav once logged in. Need a second admin later? Create it from inside
+the admin panel itself once logged in as the first one — there's no separate self-signup flow, and
+there doesn't need to be.
 
 ## Which triggers were built
 
@@ -153,9 +160,12 @@ mail sent locally): http://localhost:8025.
    - `DJANGO_ALLOWED_HOSTS` — fill in once you know the service's `*.onrender.com` hostname.
    - `CORS_ALLOWED_ORIGINS` — fill in once you know the Vercel URL (step below).
    - The 6 provider credential vars — leave blank for now if sandbox accounts aren't ready yet.
-4. Deploy. The Dockerfile handles everything else (migrations run automatically on container
-   start, static files are pre-collected at build time).
-5. Once live, open the service's **Shell** tab and run `python manage.py createsuperuser`.
+   - `DJANGO_SUPERUSER_USERNAME` / `EMAIL` / `PASSWORD` — the free tier has no Shell access to run
+     `createsuperuser` by hand, so fill these in now; the entrypoint script creates that admin
+     account automatically on first boot (see [How to log in as admin](#how-to-log-in-as-admin)).
+4. Deploy. The Dockerfile handles everything else: migrations run automatically on container
+   start, static files are pre-collected at build time, and the admin account from step 3 is
+   created on that same first boot.
 
 ### Frontend → Vercel
 
