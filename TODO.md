@@ -3,10 +3,10 @@
 ## Todo
 
 ## In-Progress
-- FEAT-20260822-2252 — Website pages redesign: home, login, logout, unauthorized restyled with the new design system (spec: docs/specs/FEAT-20260822-2252-website-pages-redesign.md)
 - FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers (spec: docs/specs/FEAT-20260822-1219-readme.md)
 
 ## Done
+- FEAT-20260822-2252 — Website pages redesign: home, login, logout, unauthorized restyled with the new design system (spec: docs/specs/FEAT-20260822-2252-website-pages-redesign.md) [2026-08-22 23:33]
 - FEAT-20260822-2251 — New Logs page: /admin/logs using the existing GET /api/admin/logs/ endpoint (spec: docs/specs/FEAT-20260822-2251-logs-page.md) [2026-08-22 23:24]
 - FEAT-20260822-2250 — Admin screens redesign: trigger table, new-trigger form, template editor rebuilt on the new component system (spec: docs/specs/FEAT-20260822-2250-admin-screens-redesign.md) [2026-08-22 23:18]
 - FEAT-20260822-2249 — Admin shell: sidebar layout + nav for the (admin) section (spec: docs/specs/FEAT-20260822-2249-admin-shell.md) [2026-08-22 23:08]
