@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
@@ -17,8 +18,9 @@ export default function LogoutPage() {
   }, [logout, router]);
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center p-16">
-      <p className="text-sm text-neutral-500">Logging out…</p>
+    <div className="flex flex-1 flex-col items-center justify-center gap-2 p-16">
+      <Loader2 className="size-5 animate-spin text-foreground-muted" aria-hidden />
+      <p className="text-sm text-foreground-muted">Logging out…</p>
     </div>
   );
 }

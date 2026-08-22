@@ -4,7 +4,22 @@ import { useState, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
+import { FieldError, FieldLabel, Input, Textarea } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
+
+/** DRF validation errors come back as {field: [messages]}. Render them readably instead of
+ * dumping raw JSON; fall back to a generic message if the shape doesn't match. */
+function parseApiError(data: unknown): string | null {
+  if (!data || typeof data !== "object") return null;
+  const entries = Object.entries(data as Record<string, unknown>);
+  if (entries.length === 0) return null;
+  const lines = entries.map(([field, messages]) => {
+    const text = Array.isArray(messages) ? messages.join(" ") : String(messages);
+    return field === "detail" ? text : `${field}: ${text}`;
+  });
+  return lines.join(" ");
+}
 
 export default function NewTriggerPage() {
   const { authFetch } = useAuth();
@@ -25,8 +40,8 @@ export default function NewTriggerPage() {
         body: JSON.stringify({ key, display_name: displayName, description }),
       });
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(JSON.stringify(data));
+        const data = await res.json().catch(() => null);
+        throw new Error(parseApiError(data) || "Failed to create trigger.");
       }
       router.push("/admin");
     } catch (err) {
@@ -37,46 +52,30 @@ export default function NewTriggerPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-8">
-      <Link href="/admin" className="text-sm underline">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-8">
+      <Link href="/admin" className="text-sm text-foreground-secondary hover:text-foreground">
         ← Back to triggers
       </Link>
-      <h1 className="text-xl font-semibold">New trigger</h1>
-      <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-3">
-        <label className="flex flex-col gap-1 text-sm">
-          Key (e.g. <code>login</code>)
-          <input
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-            className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
-            required
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          Display name
-          <input
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
-            required
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          Description
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
-          />
-        </label>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded bg-foreground px-3 py-2 text-sm text-background disabled:opacity-50"
-        >
+      <h1 className="text-lg font-semibold text-foreground">New trigger</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1.5">
+          <FieldLabel>
+            Key (e.g. <code className="font-mono normal-case">login</code>)
+          </FieldLabel>
+          <Input value={key} onChange={(e) => setKey(e.target.value)} required />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <FieldLabel>Display name</FieldLabel>
+          <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <FieldLabel>Description</FieldLabel>
+          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
+        </div>
+        <FieldError>{error}</FieldError>
+        <Button type="submit" loading={submitting} className="w-fit">
           {submitting ? "Creating…" : "Create trigger"}
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -1,26 +1,136 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f6;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-muted: #f0ebe6;
+
+  --foreground: #1c1917;
+  --foreground-secondary: #57534e;
+  --foreground-muted: #78716c;
+
+  --primary: #ff6b4a;
+  --primary-hover: #f55a38;
+  --primary-active: #e14d2c;
+  --primary-foreground: #ffffff;
+
+  --border: #e7e2dd;
+  --border-subtle: #f0ebe6;
+  --border-strong: #d6d0c9;
+
+  --success: #16a34a;
+  --success-bg: #22c55e1a;
+  --warning: #d97706;
+  --warning-bg: #f59e0b1a;
+  --error: #dc2626;
+  --error-bg: #ef44441a;
+  --info: #2563eb;
+  --info-bg: #3b82f61a;
+
+  --channel-whatsapp: #22c55e;
+  --channel-whatsapp-foreground: #052e12;
+  --channel-email: #3b82f6;
+  --channel-email-foreground: #0a1a33;
+  --channel-webpush: #a855f7;
+  --channel-webpush-foreground: #2c0a3d;
+
+  --focus: #ff6b4a;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-muted: var(--surface-muted);
+
   --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-error: var(--error);
+  --color-error-bg: var(--error-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+
+  --color-channel-whatsapp: var(--channel-whatsapp);
+  --color-channel-whatsapp-foreground: var(--channel-whatsapp-foreground);
+  --color-channel-email: var(--channel-email);
+  --color-channel-email-foreground: var(--channel-email-foreground);
+  --color-channel-webpush: var(--channel-webpush);
+  --color-channel-webpush-foreground: var(--channel-webpush-foreground);
+
+  --color-focus: var(--focus);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-full: var(--radius-full);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #151313;
+    --surface: #1c1a19;
+    --surface-elevated: #26221f;
+    --surface-muted: #201d1c;
+
+    --foreground: #f7f3ef;
+    --foreground-secondary: #d6d3d1;
+    --foreground-muted: #a8a29e;
+
+    --primary: #ff6b4a;
+    --primary-hover: #ff7d5f;
+    --primary-active: #e5603f;
+    --primary-foreground: #ffffff;
+
+    --border: #3a3634;
+    --border-subtle: #2a2725;
+    --border-strong: #4a4542;
+
+    --success: #4ade80;
+    --success-bg: #16a34a22;
+    --warning: #fbbf24;
+    --warning-bg: #d9770622;
+    --error: #f87171;
+    --error-bg: #dc262622;
+    --info: #60a5fa;
+    --info-bg: #2563eb22;
+
+    --channel-whatsapp: #22c55e;
+    --channel-whatsapp-foreground: #052e12;
+    --channel-email: #3b82f6;
+    --channel-email-foreground: #0a1a33;
+    --channel-webpush: #a855f7;
+    --channel-webpush-foreground: #2c0a3d;
+
+    --focus: #ff6b4a;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }

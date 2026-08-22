@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import OneSignalInit from "@/components/OneSignalInit";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <OneSignalInit />
         <AuthProvider>{children}</AuthProvider>
+        <Toaster theme="system" position="bottom-right" richColors />
       </body>
     </html>
   );

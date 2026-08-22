@@ -3,6 +3,9 @@
 import { useEffect, useState, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { FieldError, FieldLabel, Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { subscribeToWebPush } from "@/lib/onesignal";
 
@@ -48,35 +51,34 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-16">
-      <h1 className="text-xl font-semibold">Login</h1>
-      <form onSubmit={handleSubmit} className="flex w-full max-w-xs flex-col gap-3">
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="rounded border border-black/15 px-3 py-2 text-sm dark:border-white/20"
-          autoComplete="username"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="rounded border border-black/15 px-3 py-2 text-sm dark:border-white/20"
-          autoComplete="current-password"
-          required
-        />
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded bg-foreground px-3 py-2 text-sm text-background disabled:opacity-50"
-        >
-          {submitting ? "Logging in…" : "Log in"}
-        </button>
-      </form>
+      <h1 className="text-xl font-semibold text-foreground">Login</h1>
+      <Card className="w-full max-w-xs p-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>Username</FieldLabel>
+            <Input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>Password</FieldLabel>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </div>
+          <FieldError>{error}</FieldError>
+          <Button type="submit" loading={submitting}>
+            {submitting ? "Logging in…" : "Log in"}
+          </Button>
+        </form>
+      </Card>
     </div>
   );
 }

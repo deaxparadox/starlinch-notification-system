@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { buttonVariants } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
 
 export default function HomePage() {
@@ -9,14 +11,14 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-16 text-center">
-      <h1 className="text-2xl font-semibold">Starclinch Notification System</h1>
+      <h1 className="text-2xl font-semibold text-foreground">Starclinch Notification System</h1>
 
-      {status === "loading" && <p className="text-sm text-neutral-500">Loading…</p>}
+      {status === "loading" && <Skeleton className="h-9 w-28" />}
 
       {status === "anonymous" && (
         <>
-          <p className="text-sm text-neutral-500">You&apos;re not logged in.</p>
-          <Link href="/login" className="text-sm underline">
+          <p className="text-sm text-foreground-muted">You&apos;re not logged in.</p>
+          <Link href="/login" className={buttonVariants("primary", "md")}>
             Log in
           </Link>
         </>
@@ -24,10 +26,10 @@ export default function HomePage() {
 
       {status === "authenticated" && (
         <>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-foreground-muted">
             {user ? `Welcome back, ${user.username}.` : "You're logged in."}
           </p>
-          <Link href="/logout" className="text-sm underline">
+          <Link href="/logout" className={buttonVariants("secondary", "md")}>
             Log out
           </Link>
         </>

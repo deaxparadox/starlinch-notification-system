@@ -3,7 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/badge";
+import { FieldLabel, Input, Textarea } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/lib/auth";
 import type { Channel, Trigger } from "@/lib/types";
 
@@ -12,6 +18,11 @@ const CHANNEL_LABELS: Record<Channel, string> = {
   email: "Email",
   webpush: "Web Push",
 };
+
+interface SendResult {
+  status: "sent" | "failed";
+  error?: string;
+}
 
 export default function TemplateEditorPage() {
   const params = useParams<{ id: string; channel: Channel }>();
@@ -30,11 +41,10 @@ export default function TemplateEditorPage() {
   const [waVariableMapping, setWaVariableMapping] = useState("");
 
   const [isActive, setIsActive] = useState(false);
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [saveError, setSaveError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const [testRecipient, setTestRecipient] = useState("");
-  const [testResult, setTestResult] = useState<string | null>(null);
+  const [testResult, setTestResult] = useState<SendResult | null>(null);
   const [testing, setTesting] = useState(false);
 
   const fetchTrigger = useCallback(async (): Promise<Trigger> => {
@@ -61,8 +71,7 @@ export default function TemplateEditorPage() {
   }, [fetchTrigger, channel]);
 
   async function handleSave() {
-    setSaveState("saving");
-    setSaveError("");
+    setSaving(true);
     const payload =
       channel === "whatsapp"
         ? {
@@ -79,12 +88,12 @@ export default function TemplateEditorPage() {
       method: "PATCH",
       body: JSON.stringify(payload),
     });
+    setSaving(false);
     if (!res.ok) {
-      setSaveState("error");
-      setSaveError("Failed to save template.");
+      toast.error("Failed to save template.");
       return;
     }
-    setSaveState("saved");
+    toast.success("Template saved.");
   }
 
   async function handleToggle(next: boolean) {
@@ -103,106 +112,101 @@ export default function TemplateEditorPage() {
       body: JSON.stringify({ recipient: testRecipient }),
     });
     const data = await res.json().catch(() => ({}));
-    setTestResult(JSON.stringify(data));
+    setTestResult(data[channel] ?? { status: "failed", error: "No response from server." });
     setTesting(false);
   }
 
-  if (loadError) return <p className="p-8 text-sm text-red-600">{loadError}</p>;
-  if (!trigger) return <p className="p-8 text-sm text-neutral-500">Loading…</p>;
+  if (loadError) return <p className="p-8 text-sm text-error">{loadError}</p>;
+  if (!trigger) {
+    return (
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 p-8">
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-32 w-full" />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-8">
-      <Link href="/admin" className="text-sm underline">
+    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-8">
+      <Link href="/admin" className="text-sm text-foreground-secondary hover:text-foreground">
         ← Back to triggers
       </Link>
-      <h1 className="text-xl font-semibold">
+      <h1 className="text-lg font-semibold text-foreground">
         {trigger.display_name} — {CHANNEL_LABELS[channel]}
       </h1>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={isActive} onChange={(e) => handleToggle(e.target.checked)} />
-        Active
-      </label>
+      <div className="flex items-center gap-2">
+        <Switch checked={isActive} onCheckedChange={handleToggle} label="Active" />
+        <span className="text-sm text-foreground-secondary">Active</span>
+      </div>
 
-      <div className="flex max-w-md flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {channel === "whatsapp" ? (
           <>
-            <label className="flex flex-col gap-1 text-sm">
-              Meta template name
-              <input
-                value={waTemplateName}
-                onChange={(e) => setWaTemplateName(e.target.value)}
-                className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
-              />
-            </label>
-            <label className="flex flex-col gap-1 text-sm">
-              Language code
-              <input
-                value={waLanguageCode}
-                onChange={(e) => setWaLanguageCode(e.target.value)}
-                className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
-              />
-            </label>
-            <label className="flex flex-col gap-1 text-sm">
-              Variables (comma-separated, ordered — e.g. <code>name, login_time</code>)
-              <input
+            <div className="flex flex-col gap-1.5">
+              <FieldLabel>Meta template name</FieldLabel>
+              <Input value={waTemplateName} onChange={(e) => setWaTemplateName(e.target.value)} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <FieldLabel>Language code</FieldLabel>
+              <Input value={waLanguageCode} onChange={(e) => setWaLanguageCode(e.target.value)} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <FieldLabel>Variables (ordered, comma-separated)</FieldLabel>
+              <Input
                 value={waVariableMapping}
                 onChange={(e) => setWaVariableMapping(e.target.value)}
-                className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
+                placeholder="name, login_time"
               />
-            </label>
+            </div>
           </>
         ) : (
           <>
             {channel === "email" && (
-              <label className="flex flex-col gap-1 text-sm">
-                Subject
-                <input
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
-                />
-              </label>
+              <div className="flex flex-col gap-1.5">
+                <FieldLabel>Subject</FieldLabel>
+                <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
+              </div>
             )}
-            <label className="flex flex-col gap-1 text-sm">
-              Body ({"{{ variable }}"} supported)
-              <textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                rows={4}
-                className="rounded border border-black/15 px-3 py-2 dark:border-white/20"
-              />
-            </label>
+            <div className="flex flex-col gap-1.5">
+              <FieldLabel>Body ({"{{ variable }}"} supported)</FieldLabel>
+              <Textarea value={body} onChange={(e) => setBody(e.target.value)} rows={4} />
+            </div>
           </>
         )}
 
-        <button
-          onClick={handleSave}
-          disabled={saveState === "saving"}
-          className="w-fit rounded bg-foreground px-3 py-2 text-sm text-background disabled:opacity-50"
-        >
-          {saveState === "saving" ? "Saving…" : "Save template"}
-        </button>
-        {saveState === "saved" && <p className="text-sm text-green-600">Saved.</p>}
-        {saveState === "error" && <p className="text-sm text-red-600">{saveError}</p>}
+        <Button onClick={handleSave} loading={saving} className="w-fit">
+          {saving ? "Saving…" : "Save template"}
+        </Button>
       </div>
 
-      <div className="mt-4 flex max-w-md flex-col gap-2 border-t border-black/10 pt-4 dark:border-white/15">
-        <h2 className="text-sm font-semibold">Test send</h2>
-        <input
+      <div className="mt-2 flex flex-col gap-3 border-t border-border-subtle pt-5">
+        <h2 className="text-sm font-semibold text-foreground">Test send</h2>
+        <Input
           value={testRecipient}
           onChange={(e) => setTestRecipient(e.target.value)}
-          placeholder={channel === "email" ? "you@example.com" : channel === "whatsapp" ? "+1555..." : "onesignal player id"}
-          className="rounded border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+          placeholder={
+            channel === "email" ? "you@example.com" : channel === "whatsapp" ? "+1555…" : "onesignal player id"
+          }
         />
-        <button
+        <Button
+          variant="secondary"
           onClick={handleTestSend}
-          disabled={testing || !testRecipient}
-          className="w-fit rounded border border-black/20 px-3 py-1.5 text-sm disabled:opacity-50 dark:border-white/25"
+          loading={testing}
+          disabled={!testRecipient}
+          className="w-fit"
         >
           {testing ? "Sending…" : "Test send"}
-        </button>
-        {testResult && <pre className="whitespace-pre-wrap text-xs text-neutral-500">{testResult}</pre>}
+        </Button>
+        {testResult && (
+          <div className="flex flex-col gap-1">
+            <StatusBadge status={testResult.status === "sent" ? "success" : "error"}>
+              {testResult.status === "sent" ? "Sent" : "Failed"}
+            </StatusBadge>
+            {testResult.error && <p className="text-xs text-foreground-muted">{testResult.error}</p>}
+          </div>
+        )}
       </div>
     </div>
   );
