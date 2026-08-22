@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ListChecks, LogOut } from "lucide-react";
+import { Bell, LayoutDashboard, ListChecks, LogOut } from "lucide-react";
 
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/lib/auth";
 
 const NAV_ITEMS = [
-  { href: "/admin", label: "Triggers", icon: Bell },
-  { href: "/admin/logs", label: "Logs", icon: ListChecks },
+  { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
+  { href: "/admin/triggers", label: "Triggers", icon: Bell, exact: false },
+  { href: "/admin/logs", label: "Logs", icon: ListChecks, exact: false },
 ];
 
 export function AdminSidebar({ collapsed }: { collapsed: boolean }) {
@@ -32,7 +33,7 @@ export function AdminSidebar({ collapsed }: { collapsed: boolean }) {
         {collapsed ? "S" : "Starclinch"}
       </div>
       {NAV_ITEMS.map((item) => {
-        const active = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
+        const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
         const Icon = item.icon;
         return (
           <Link

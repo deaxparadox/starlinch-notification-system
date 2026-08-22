@@ -129,7 +129,7 @@ export default function TemplateEditorPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-8">
-      <Link href="/admin" className="text-sm text-foreground-secondary hover:text-foreground">
+      <Link href="/admin/triggers" className="text-sm text-foreground-secondary hover:text-foreground">
         ← Back to triggers
       </Link>
       <h1 className="text-lg font-semibold text-foreground">

@@ -43,7 +43,7 @@ export default function NewTriggerPage() {
         const data = await res.json().catch(() => null);
         throw new Error(parseApiError(data) || "Failed to create trigger.");
       }
-      router.push("/admin");
+      router.push("/admin/triggers");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create trigger.");
     } finally {
@@ -53,7 +53,7 @@ export default function NewTriggerPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-8">
-      <Link href="/admin" className="text-sm text-foreground-secondary hover:text-foreground">
+      <Link href="/admin/triggers" className="text-sm text-foreground-secondary hover:text-foreground">
         ← Back to triggers
       </Link>
       <h1 className="text-lg font-semibold text-foreground">New trigger</h1>

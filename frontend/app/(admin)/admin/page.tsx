@@ -1,144 +1,111 @@
 "use client";
 
 import Link from "next/link";
-import { Inbox } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ChannelBadge, StatusBadge } from "@/components/ui/badge";
-import { Dialog } from "@/components/ui/dialog";
-import { EmptyState } from "@/components/ui/empty-state";
+import { Card } from "@/components/ui/card";
+import { GradientHero } from "@/components/ui/gradient-hero";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth";
-import type { Channel, Trigger } from "@/lib/types";
+import type { Stats } from "@/lib/types";
 
-const CHANNELS: { key: Channel; label: string }[] = [
-  { key: "whatsapp", label: "WhatsApp" },
-  { key: "email", label: "Email" },
-  { key: "webpush", label: "Web Push" },
-];
-
-function CellBadge({ trigger, channel }: { trigger: Trigger; channel: Channel }) {
-  const template = trigger.templates[channel];
-  if (!template) return <StatusBadge status="muted">Not set</StatusBadge>;
-  return template.is_active ? (
-    <StatusBadge status="success">Active</StatusBadge>
-  ) : (
-    <StatusBadge status="error">Inactive</StatusBadge>
-  );
+function greeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
 }
 
-export default function AdminDashboardPage() {
+export default function AdminOverviewPage() {
   const { authFetch } = useAuth();
-  const [triggers, setTriggers] = useState<Trigger[] | null>(null);
+  const [stats, setStats] = useState<Stats | null>(null);
   const [error, setError] = useState("");
-  const [pendingDelete, setPendingDelete] = useState<Trigger | null>(null);
 
-  const fetchTriggers = useCallback(async (): Promise<Trigger[]> => {
-    const res = await authFetch("/api/admin/triggers/");
-    if (!res.ok) throw new Error("Failed to load triggers.");
+  const fetchStats = useCallback(async (): Promise<Stats> => {
+    const res = await authFetch("/api/admin/stats/");
+    if (!res.ok) throw new Error("Failed to load stats.");
     return res.json();
   }, [authFetch]);
 
   useEffect(() => {
-    fetchTriggers()
-      .then(setTriggers)
-      .catch(() => setError("Failed to load triggers."));
-  }, [fetchTriggers]);
-
-  async function handleDeleteConfirmed() {
-    if (!pendingDelete) return;
-    await authFetch(`/api/admin/triggers/${pendingDelete.id}/`, { method: "DELETE" });
-    setPendingDelete(null);
-    fetchTriggers()
-      .then(setTriggers)
-      .catch(() => setError("Failed to load triggers."));
-  }
+    fetchStats()
+      .then(setStats)
+      .catch(() => setError("Failed to load stats."));
+  }, [fetchStats]);
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-foreground">Notification Settings</h1>
-        <Link href="/admin/triggers/new" className={buttonVariants("primary", "md")}>
-          + New trigger
+    <div className="flex flex-1 flex-col">
+      <GradientHero size="full">
+        <h1 className="text-4xl font-extrabold leading-tight text-foreground">
+          {greeting()} 👋<br />Here&apos;s what your users saw today.
+        </h1>
+        {stats && (
+          <p className="mt-2 max-w-md text-foreground-secondary">
+            {stats.active_triggers} / {stats.total_triggers} triggers live across 3 channels.
+          </p>
+        )}
+        <Link href="/admin/logs" className={buttonVariants("primary", "md", "mt-5")}>
+          View all activity →
         </Link>
-      </div>
+      </GradientHero>
 
-      {error && <p className="text-sm text-error">{error}</p>}
+      {error && <p className="px-12 pb-4 text-sm text-error">{error}</p>}
 
-      {!triggers && !error && (
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-full" />
+      {!stats && !error && (
+        <div className="flex gap-4 px-12 pb-8">
+          <Skeleton className="h-24 flex-1" />
+          <Skeleton className="h-24 flex-1" />
+          <Skeleton className="h-24 flex-1" />
         </div>
       )}
 
-      {triggers && triggers.length === 0 && (
-        <EmptyState
-          icon={Inbox}
-          title="No triggers yet"
-          description="Create one to get started."
-          action={
-            <Link href="/admin/triggers/new" className={buttonVariants("primary", "sm")}>
-              + New trigger
-            </Link>
-          }
-        />
+      {stats && (
+        <div className="flex gap-4 px-12 pb-8">
+          <Card className="flex-1 p-5">
+            <div className="bg-gradient-to-r from-blob-1 to-blob-3 bg-clip-text text-3xl font-extrabold text-transparent">
+              {stats.sent_today}
+            </div>
+            <div className="mt-1 text-xs text-foreground-muted">Notifications sent</div>
+          </Card>
+          <Card className="flex-1 p-5">
+            <div className="text-3xl font-extrabold text-foreground">{stats.failed_today}</div>
+            <div className="mt-1 text-xs text-foreground-muted">Failed sends</div>
+          </Card>
+          <Card className="flex-1 p-5">
+            <div className="text-3xl font-extrabold text-foreground">
+              {stats.active_triggers} / {stats.total_triggers}
+            </div>
+            <div className="mt-1 text-xs text-foreground-muted">Triggers active</div>
+          </Card>
+        </div>
       )}
 
-      {triggers && triggers.length > 0 && (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Trigger</TableHeaderCell>
-              {CHANNELS.map((c) => (
-                <TableHeaderCell key={c.key}>
-                  <ChannelBadge channel={c.key}>{c.label}</ChannelBadge>
-                </TableHeaderCell>
-              ))}
-              <TableHeaderCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {triggers.map((trigger) => (
-              <TableRow key={trigger.id}>
-                <TableCell className="font-medium">{trigger.display_name}</TableCell>
-                {CHANNELS.map((c) => (
-                  <TableCell key={c.key}>
-                    <Link href={`/admin/triggers/${trigger.id}/templates/${c.key}`}>
-                      <CellBadge trigger={trigger} channel={c.key} />
-                    </Link>
-                  </TableCell>
-                ))}
-                <TableCell>
-                  <button
-                    onClick={() => setPendingDelete(trigger)}
-                    className="text-sm font-medium text-error hover:underline"
-                  >
-                    Delete
-                  </button>
-                </TableCell>
-              </TableRow>
+      <div className="px-12 pb-12">
+        <h2 className="mb-3 text-base font-bold text-foreground">Recent activity</h2>
+
+        {stats && stats.recent.length === 0 && (
+          <p className="text-sm text-foreground-muted">No activity yet.</p>
+        )}
+
+        {stats && stats.recent.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {stats.recent.map((log) => (
+              <div
+                key={log.id}
+                className="flex items-center gap-3 rounded-radius-md border border-border-subtle bg-surface px-4 py-3 text-sm"
+              >
+                <span className="font-medium text-foreground">{log.trigger_key ?? "—"}</span>
+                <ChannelBadge channel={log.channel}>{log.channel}</ChannelBadge>
+                <StatusBadge status={log.status === "sent" ? "success" : "error"}>
+                  {log.status === "sent" ? "Sent" : "Failed"}
+                </StatusBadge>
+              </div>
             ))}
-          </TableBody>
-        </Table>
-      )}
-
-      <Dialog open={!!pendingDelete} onClose={() => setPendingDelete(null)} title="Delete trigger?">
-        <p className="mb-4 text-sm text-foreground-secondary">
-          Delete &ldquo;{pendingDelete?.display_name}&rdquo;? This removes all its templates too.
-        </p>
-        <div className="flex justify-end gap-2">
-          <Button variant="ghost" onClick={() => setPendingDelete(null)}>
-            Cancel
-          </Button>
-          <Button variant="destructive" onClick={handleDeleteConfirmed}>
-            Delete
-          </Button>
-        </div>
-      </Dialog>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
