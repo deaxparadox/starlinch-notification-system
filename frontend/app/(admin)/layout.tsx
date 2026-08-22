@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminSidebar } from "@/components/AdminSidebar";
+import { AdminTopBar } from "@/components/AdminTopBar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ForbiddenError } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth";
+import { useLocalStorageBoolean } from "@/lib/useLocalStorageBoolean";
+
+const SIDEBAR_COLLAPSED_KEY = "admin-sidebar-collapsed";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { status, user, authFetch } = useAuth();
@@ -16,6 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // learn whether this session is staff.
   const needsProbe = status === "authenticated" && !user;
   const [probeGranted, setProbeGranted] = useState(false);
+  const [collapsed, setCollapsed] = useLocalStorageBoolean(SIDEBAR_COLLAPSED_KEY);
 
   useEffect(() => {
     if (status === "anonymous") {
@@ -64,8 +69,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex flex-1">
-      <AdminSidebar />
-      <div className="flex flex-1 flex-col">{children}</div>
+      <AdminSidebar collapsed={collapsed} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <AdminTopBar collapsed={collapsed} onToggleSidebar={() => setCollapsed(!collapsed)} />
+        <div className="flex-1 overflow-y-auto">
+          <div className="mx-auto w-full max-w-5xl">{children}</div>
+        </div>
+      </div>
     </div>
   );
 }

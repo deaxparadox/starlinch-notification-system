@@ -89,7 +89,7 @@ export default function AdminDashboardPage() {
       )}
 
       {triggers && triggers.length > 0 && (
-        <Table className="max-w-3xl">
+        <Table>
           <TableHead>
             <TableRow>
               <TableHeaderCell>Trigger</TableHeaderCell>
