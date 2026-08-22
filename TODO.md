@@ -1,11 +1,11 @@
 # TODO
 
 ## Todo
-- FEAT-20260822-1217 — Admin panel UI: trigger x channel table, template editor, toggles, test-send button, unauthorized page
 - FEAT-20260822-1218 — Deployment: Django backend on Render (+ managed Postgres), Next.js frontend on Vercel, first admin user created
 - FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers
 
 ## In-Progress
+- FEAT-20260822-1217 — Admin panel UI: trigger x channel table, template editor, toggles, test-send button, unauthorized page (spec: docs/specs/FEAT-20260822-1217-admin-panel-ui.md)
 
 ## Done
 - FEAT-20260822-1216 — Website pages: login/logout pages that fire triggers, post-login Web Push subscribe flow (OneSignal) (spec: docs/specs/FEAT-20260822-1216-website-pages.md) [2026-08-22 19:56]
