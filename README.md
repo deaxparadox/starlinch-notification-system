@@ -159,7 +159,10 @@ mail sent locally): http://localhost:8025.
 
 ### Frontend → Vercel
 
-1. Import this repo in Vercel, set the **root directory** to `frontend/`.
+1. Import this repo in Vercel, set the **root directory** to `frontend/` — this, plus
+   `frontend/vercel.json` (`render.yaml`'s counterpart on the Vercel side), keeps the frontend
+   deploy scoped to `frontend/` only, matching the assignment's "Django on Render, Next.js on
+   Vercel" split.
 2. Set env vars in the Vercel project settings: `NEXT_PUBLIC_API_URL` (the Render URL from above),
    `NEXT_PUBLIC_ONESIGNAL_APP_ID` (if OneSignal is configured).
 3. Deploy.
