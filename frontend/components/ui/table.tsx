@@ -12,7 +12,7 @@ export function TableHead({ children }: { children: React.ReactNode }) {
   return <thead className="bg-surface-muted">{children}</thead>;
 }
 
-export function TableHeaderCell({ children }: { children: React.ReactNode }) {
+export function TableHeaderCell({ children }: { children?: React.ReactNode }) {
   return (
     <th className="px-4 py-2.5 text-left text-xs font-medium uppercase tracking-wide text-foreground-secondary">
       {children}

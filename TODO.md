@@ -5,10 +5,10 @@
 - FEAT-20260822-2252 — Website pages redesign: home, login, logout, unauthorized restyled with the new design system
 
 ## In-Progress
-- FEAT-20260822-2250 — Admin screens redesign: trigger table, new-trigger form, template editor rebuilt on the new component system (spec: docs/specs/FEAT-20260822-2250-admin-screens-redesign.md)
 - FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers (spec: docs/specs/FEAT-20260822-1219-readme.md)
 
 ## Done
+- FEAT-20260822-2250 — Admin screens redesign: trigger table, new-trigger form, template editor rebuilt on the new component system (spec: docs/specs/FEAT-20260822-2250-admin-screens-redesign.md) [2026-08-22 23:18]
 - FEAT-20260822-2249 — Admin shell: sidebar layout + nav for the (admin) section (spec: docs/specs/FEAT-20260822-2249-admin-shell.md) [2026-08-22 23:08]
 - FEAT-20260822-2248 — Design system foundation: Tailwind theme tokens (light/dark "Signal" palette), typography (Geist actually applied), reusable components (Button, Input, Switch, Badge, Card, Table, Dialog, Toast, EmptyState, Skeleton), icons (lucide-react) (spec: docs/specs/FEAT-20260822-2248-design-system-foundation.md) [2026-08-22 23:03]
 - FEAT-20260822-1218 — Deployment prep: fixed Dockerfile to bind Render's $PORT, added an entrypoint script (migrate + exec gunicorn for correct signal handling), whitenoise for static files, and a render.yaml blueprint. Scope changed after checking with user: they'll create the Render/Vercel accounts and do the actual deploy + createsuperuser themselves, using instructions in FEAT-20260822-1219's README (spec: docs/specs/FEAT-20260822-1218-deployment-prep.md) [2026-08-22 20:29]
