@@ -1,6 +1,11 @@
 # TODO
 
 ## Todo
+- FEAT-20260823-0453 — Design refresh v2, part 1: design system v2 foundation. New Tailwind tokens for the "Direction D" visual language confirmed with the user via visual-companion mockups (light background, soft blurred gradient-blob atmosphere, oversized bold typography, neutral rounded cards, pill buttons/badges), replacing the old dark-mode-aware "Signal" tokens (dark mode dropped per ADR-0003 Decision 3). (ADR: docs/adr/0003-design-refresh-v2.md)
+- FEAT-20260823-0454 — Design refresh v2, part 2: backend stats endpoint. New `GET /api/admin/stats/` aggregating sent/failed counts for today and active-trigger count from `NotificationLog`/`Trigger` — the real data the new Overview page needs; doesn't exist today (only the filterable logs list endpoint does). (ADR: docs/adr/0003-design-refresh-v2.md)
+- FEAT-20260823-0455 — Design refresh v2, part 3: new admin Overview page. Full hero treatment (large gradient blobs, big headline, stat cards, recent activity list) using FEAT-20260823-0454's stats endpoint; becomes the sidebar's first item and `/admin`'s new default landing, replacing the trigger table as the first thing seen after login. (ADR: docs/adr/0003-design-refresh-v2.md)
+- FEAT-20260823-0456 — Design refresh v2, part 4: admin pages redesign pass. Apply the reduced-hero + card/pill language (confirmed against the trigger table mockup) to trigger table, template editor, new-trigger form, and logs page. (ADR: docs/adr/0003-design-refresh-v2.md)
+- FEAT-20260823-0457 — Design refresh v2, part 5: website pages redesign pass. Apply the full-hero version of Direction D to home, login, logout, unauthorized — completes whole-app scope so nothing is left on the old "Signal" look. (ADR: docs/adr/0003-design-refresh-v2.md)
 
 ## In-Progress
 
