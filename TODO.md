@@ -13,3 +13,4 @@
 
 ## Done
 - FEAT-20260822-1212 — Backend foundation: Django project, custom User model, JWT login/logout/refresh (access token in body, refresh token in httpOnly cookie), Docker + docker-compose for local dev (spec: docs/specs/FEAT-20260822-1212-backend-foundation.md) [2026-08-22 18:24]
+- BUG-20260822-1234 — Refresh token not invalidated on logout/refresh (session fixation risk), and logout's cookie-clear used Django's delete_cookie() which has no `secure` param and silently fails to clear a SameSite=None cookie in browsers. Found by automated security review of FEAT-20260822-1212's commit. Fixed: added rest_framework_simplejwt.token_blacklist, refresh tokens now rotate + blacklist the used token on every /refresh/ and /logout/ call, and cookie clearing uses set_cookie(max_age=0, ...) with matching flags instead of delete_cookie(). [2026-08-22 18:34]
