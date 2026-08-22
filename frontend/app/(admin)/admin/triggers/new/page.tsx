@@ -52,12 +52,12 @@ export default function NewTriggerPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-8">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-8">
       <Link href="/admin" className="text-sm text-foreground-secondary hover:text-foreground">
         ← Back to triggers
       </Link>
       <h1 className="text-lg font-semibold text-foreground">New trigger</h1>
-      <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <FieldLabel>
             Key (e.g. <code className="font-mono normal-case">login</code>)

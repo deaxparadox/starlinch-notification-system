@@ -119,16 +119,16 @@ export default function TemplateEditorPage() {
   if (loadError) return <p className="p-8 text-sm text-error">{loadError}</p>;
   if (!trigger) {
     return (
-      <div className="flex flex-col gap-3 p-8">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 p-8">
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-32 w-full max-w-md" />
+        <Skeleton className="h-32 w-full" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-5 p-8">
+    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-8">
       <Link href="/admin" className="text-sm text-foreground-secondary hover:text-foreground">
         ← Back to triggers
       </Link>
@@ -141,7 +141,7 @@ export default function TemplateEditorPage() {
         <span className="text-sm text-foreground-secondary">Active</span>
       </div>
 
-      <div className="flex max-w-md flex-col gap-4">
+      <div className="flex flex-col gap-4">
         {channel === "whatsapp" ? (
           <>
             <div className="flex flex-col gap-1.5">
@@ -181,7 +181,7 @@ export default function TemplateEditorPage() {
         </Button>
       </div>
 
-      <div className="mt-2 flex max-w-md flex-col gap-3 border-t border-border-subtle pt-5">
+      <div className="mt-2 flex flex-col gap-3 border-t border-border-subtle pt-5">
         <h2 className="text-sm font-semibold text-foreground">Test send</h2>
         <Input
           value={testRecipient}
