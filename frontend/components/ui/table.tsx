@@ -28,6 +28,18 @@ export function TableRow({ children, className }: { children: React.ReactNode; c
   return <tr className={cn("hover:bg-surface-muted/60 transition-colors", className)}>{children}</tr>;
 }
 
-export function TableCell({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={cn("px-4 py-2.5 text-foreground", className)}>{children}</td>;
+export function TableCell({
+  children,
+  className,
+  title,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  title?: string;
+}) {
+  return (
+    <td className={cn("px-4 py-2.5 text-foreground", className)} title={title}>
+      {children}
+    </td>
+  );
 }

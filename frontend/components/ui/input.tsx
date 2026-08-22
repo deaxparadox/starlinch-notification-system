@@ -2,7 +2,7 @@ import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 import { cn } from "@/lib/cn";
 
-const fieldBase =
+export const fieldBase =
   "w-full rounded-radius-sm border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted " +
   "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background " +
   "disabled:opacity-50 disabled:pointer-events-none";
