@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
@@ -91,6 +92,30 @@ class PushSubscriptionView(APIView):
             onesignal_player_id=player_id, defaults={"user": request.user}
         )
         return Response(status=204)
+
+
+class StatsView(APIView):
+    """Aggregate numbers for the admin Overview page. Test sends (is_test=True) are excluded from
+    every count here - a "test" button click isn't real activity and would misrepresent it."""
+
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        today = timezone.localdate()
+        real_logs_today = NotificationLog.objects.filter(is_test=False, created_at__date=today)
+        recent = NotificationLog.objects.filter(is_test=False).select_related("trigger").order_by(
+            "-created_at"
+        )[:5]
+
+        return Response(
+            {
+                "sent_today": real_logs_today.filter(status="sent").count(),
+                "failed_today": real_logs_today.filter(status="failed").count(),
+                "active_triggers": Trigger.objects.filter(is_active=True).count(),
+                "total_triggers": Trigger.objects.count(),
+                "recent": NotificationLogSerializer(recent, many=True).data,
+            }
+        )
 
 
 class NotificationLogListView(generics.ListAPIView):
