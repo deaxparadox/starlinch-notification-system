@@ -1,9 +1,9 @@
 # TODO
 
 ## Todo
-- FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers
 
 ## In-Progress
+- FEAT-20260822-1219 — README: admin login instructions, triggers built, env vars needed, known friction points, Task D plain-language answers (spec: docs/specs/FEAT-20260822-1219-readme.md)
 
 ## Done
 - FEAT-20260822-1218 — Deployment prep: fixed Dockerfile to bind Render's $PORT, added an entrypoint script (migrate + exec gunicorn for correct signal handling), whitenoise for static files, and a render.yaml blueprint. Scope changed after checking with user: they'll create the Render/Vercel accounts and do the actual deploy + createsuperuser themselves, using instructions in FEAT-20260822-1219's README (spec: docs/specs/FEAT-20260822-1218-deployment-prep.md) [2026-08-22 20:29]
