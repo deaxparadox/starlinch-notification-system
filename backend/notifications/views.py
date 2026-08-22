@@ -1,10 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import NotificationLog, Template, Trigger
+from .models import NotificationLog, PushSubscription, Template, Trigger
 from .serializers import NotificationLogSerializer, TemplateSerializer, TriggerSerializer
 from .services import fire_trigger
 
@@ -62,6 +62,26 @@ class TestSendView(APIView):
             override_channel=channel,
         )
         return Response(result)
+
+
+class PushSubscriptionView(APIView):
+    """Not an admin endpoint - any logged-in user can register their browser's OneSignal
+    subscription id against their own account."""
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        player_id = request.data.get("onesignal_player_id", "")
+        if not player_id:
+            return Response({"detail": "onesignal_player_id is required"}, status=400)
+
+        # update_or_create, not get_or_create: onesignal_player_id is globally unique. If this
+        # browser's subscription was previously tied to a different user (e.g. someone else
+        # logged in here earlier), it now belongs to whoever is subscribing now.
+        PushSubscription.objects.update_or_create(
+            onesignal_player_id=player_id, defaults={"user": request.user}
+        )
+        return Response(status=204)
 
 
 class NotificationLogListView(generics.ListAPIView):
