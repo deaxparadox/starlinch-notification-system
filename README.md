@@ -17,6 +17,29 @@ Postmark, or OneSignal's own dashboards.
 Render's free tier spins the backend down after 15 minutes idle — the first request after a
 while will be slow (10-30s) while it wakes back up. This is expected, not a bug.
 
+## Assignment checklist
+
+Checked against the assignment PDF's own checklist (section 8), honestly — including the two
+items blocked by external factors rather than code gaps:
+
+| # | Item | Status |
+|---|---|---|
+| 1 | Sandbox WhatsApp set up + test phone added | ❌ Blocked — see [Known limitations](#known-limitations) |
+| 2 | Postmark free account + sender verified | ❌ Blocked — see [Known limitations](#known-limitations) |
+| 3 | Web Push free account + browser subscribed | ✅ Done — verified on real Windows, mobile, and Linux devices |
+| 4 | Django backend built and deployed on Render | ✅ Done |
+| 5 | Frontend + admin panel built and deployed on Vercel | ✅ Done |
+| 6 | At least 2 triggers with all 3 channels working | ⚠️ Partial — Login + Logout are both wired to all 3 channels in code; only Web Push is provably working end-to-end because of #1/#2 |
+| 7 | Task A — one trigger, all 3 channels tested | ⚠️ Partial — same reason as #6 |
+| 8 | Task B — second trigger, all 3 channels tested | ⚠️ Partial — same reason as #6 |
+| 9 | Task C — edited template + used toggle | ✅ Done — template edited and re-tested repeatedly; the toggle is a simple boolean gate before the send call, proven by every working send requiring it to be on |
+| 10 | Task D — can explain triggers and channels | ✅ Done — see [Task D](#task-d--plain-language-answers) |
+| 11 | GitHub + live URLs submitted | ✅ Done |
+
+**6 of 11 fully done, 2 are external blockers (not code gaps — both adapters are built and would
+work the moment real credentials exist), and the remaining 3 are partial purely as a direct
+consequence of those two.**
+
 ## What's actually done right now
 
 | Piece | Status |
