@@ -11,8 +11,11 @@ Postmark, or OneSignal's own dashboards.
 ## Submission
 
 - **GitHub repo**: https://github.com/deaxparadox/starlinch-notification-system
-- **Live backend URL (Render)**: _not deployed yet — see [Deployment](#deployment)_
-- **Live frontend URL (Vercel)**: _not deployed yet — see [Deployment](#deployment)_
+- **Live backend URL (Render)**: https://starlinch-notification-system.onrender.com
+- **Live frontend URL (Vercel)**: https://starlinch-notification-system.vercel.app
+
+Render's free tier spins the backend down after 15 minutes idle — the first request after a
+while will be slow (10-30s) while it wakes back up. This is expected, not a bug.
 
 ## What's actually done right now
 
@@ -23,7 +26,7 @@ Postmark, or OneSignal's own dashboards.
 | **Web Push (OneSignal)** | ✅ **Fully configured and verified working end to end** — real browser push notification received on login |
 | Email (Postmark) | ⚠️ Code complete and adapter-tested against the real API shape; **sandbox account not yet approved** — see [Known limitations](#known-limitations) |
 | WhatsApp (Cloud API) | ⚠️ Code complete; **sandbox not yet configured** — see [Known limitations](#known-limitations) |
-| Deployment | Repo is deploy-ready (Dockerfile, `render.yaml` Blueprint); **not yet actually deployed** — see [Deployment](#deployment) |
+| Deployment | ✅ **Live** — backend on Render, frontend on Vercel (see [Submission](#submission) for URLs) |
 
 ## How to log in as admin
 
