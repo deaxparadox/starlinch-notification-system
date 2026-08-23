@@ -213,6 +213,17 @@ it, this is the channel to show.
 
 ### WhatsApp (Cloud API)
 
+**Status: not configured** — both issues below were actually hit while trying to set this up, not
+hypothetical risks. `WHATSAPP_ACCESS_TOKEN`/`PHONE_NUMBER_ID` are unset; the code path is built and
+adapter-tested against the real API shape, but never exercised against a live sandbox.
+
+- **Hit a "try again in about an hour" cooldown during app configuration** on the first attempt,
+  with no further detail given — a generic Meta-side rate-limit/lockout, not something caused by a
+  specific misconfigured setting.
+- **Creating a second account to work around that hit a different, known Meta gate**: "your
+  account is too new" when trying to create a Business Portfolio — a genuine Meta anti-abuse
+  restriction tied to account age, not a setup mistake. Clears on its own, typically within a few
+  hours to a few days, but there wasn't enough runway left in the assignment window to wait it out.
 - **Sandbox is capped at 5 recipient phone numbers total.** Each one must be manually added in the
   Meta App dashboard (WhatsApp → API Setup → *Manage phone number list*), and the number's owner has
   to enter a verification code sent to them via WhatsApp before they can receive test messages.
@@ -221,9 +232,6 @@ it, this is the channel to show.
   **Practically**: this channel can only be demonstrated to numbers you've explicitly added and
   verified yourself (or live, with the viewer's participation) — not asynchronously to a stranger's
   number.
-- **New Facebook accounts may be blocked from creating a Business Portfolio** ("Your Facebook
-  account is too new...") — a genuine Meta anti-abuse gate tied to account age, not a setup mistake.
-  Clears on its own, typically within a few hours to a few days.
 - The temporary access token from Meta's API Setup panel is short-lived (~1-2h) — expect to
   regenerate it periodically while testing.
 
