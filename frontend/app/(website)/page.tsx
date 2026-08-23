@@ -14,7 +14,7 @@ export default function HomePage() {
     <GradientHero
       size="full"
       padded={false}
-      className="flex flex-1 flex-col items-center justify-center gap-4 p-16 text-center"
+      className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center gap-4 p-16 text-center"
     >
       <h1 className="text-2xl font-semibold text-foreground">Starclinch Notification System</h1>
 

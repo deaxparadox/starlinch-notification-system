@@ -54,7 +54,7 @@ export default function LoginPage() {
     <GradientHero
       size="full"
       padded={false}
-      className="flex flex-1 flex-col items-center justify-center gap-4 p-16"
+      className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center gap-4 p-16"
     >
       <h1 className="text-xl font-semibold text-foreground">Login</h1>
       <Card className="w-full max-w-xs p-6">

@@ -22,7 +22,7 @@ export default function LogoutPage() {
     <GradientHero
       size="full"
       padded={false}
-      className="flex flex-1 flex-col items-center justify-center gap-2 p-16"
+      className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center gap-2 p-16"
     >
       <Loader2 className="size-5 animate-spin text-foreground-muted" aria-hidden />
       <p className="text-sm text-foreground-muted">Logging out…</p>
