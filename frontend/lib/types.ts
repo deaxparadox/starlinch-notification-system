@@ -41,3 +41,11 @@ export interface NotificationLog {
   is_test: boolean;
   created_at: string;
 }
+
+export interface Stats {
+  sent_today: number;
+  failed_today: number;
+  active_triggers: number;
+  total_triggers: number;
+  recent: NotificationLog[];
+}

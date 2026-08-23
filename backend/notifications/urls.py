@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     NotificationLogListView,
+    StatsView,
     TemplateToggleView,
     TemplateUpsertView,
     TestSendView,
@@ -28,4 +29,5 @@ urlpatterns = [
         name="admin-template-test-send",
     ),
     path("logs/", NotificationLogListView.as_view(), name="admin-notification-logs"),
+    path("stats/", StatsView.as_view(), name="admin-stats"),
 ]

@@ -2,14 +2,14 @@ import { cn } from "@/lib/cn";
 
 export function Table({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("overflow-x-auto rounded-radius-md border border-border", className)}>
+    <div className={cn("overflow-x-auto rounded-radius-lg bg-surface-warm", className)}>
       <table className="w-full border-collapse text-sm">{children}</table>
     </div>
   );
 }
 
 export function TableHead({ children }: { children: React.ReactNode }) {
-  return <thead className="bg-surface-muted">{children}</thead>;
+  return <thead>{children}</thead>;
 }
 
 export function TableHeaderCell({ children }: { children?: React.ReactNode }) {

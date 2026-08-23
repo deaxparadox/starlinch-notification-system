@@ -2,10 +2,15 @@ import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
+import { GradientHero } from "@/components/ui/gradient-hero";
 
 export default function UnauthorizedPage() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 p-16 text-center">
+    <GradientHero
+      size="full"
+      padded={false}
+      className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center gap-3 p-16 text-center"
+    >
       <div className="flex size-10 items-center justify-center rounded-radius-full bg-error-bg text-error">
         <ShieldAlert className="size-5" aria-hidden />
       </div>
@@ -16,6 +21,6 @@ export default function UnauthorizedPage() {
       <Link href="/" className={buttonVariants("secondary", "md")}>
         Back to home
       </Link>
-    </div>
+    </GradientHero>
   );
 }

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { ChannelBadge, StatusBadge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
+import { GradientHero } from "@/components/ui/gradient-hero";
 import { Select } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/ui/table";
@@ -54,9 +55,12 @@ export default function LogsPage() {
   }, [fetchLogs]);
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-8">
-      <h1 className="text-lg font-semibold text-foreground">Notification Logs</h1>
+    <div className="flex flex-1 flex-col">
+      <GradientHero size="reduced">
+        <h1 className="text-[28px] font-extrabold text-foreground">Logs</h1>
+      </GradientHero>
 
+      <div className="flex flex-col gap-4 px-12 pb-8">
       <div className="flex flex-wrap gap-3">
         <Select value={triggerFilter} onChange={(e) => setTriggerFilter(e.target.value)} className="w-48">
           <option value="">All triggers</option>
@@ -142,6 +146,7 @@ export default function LogsPage() {
           </TableBody>
         </Table>
       )}
+      </div>
     </div>
   );
 }
