@@ -19,26 +19,26 @@ while will be slow (10-30s) while it wakes back up. This is expected, not a bug.
 
 ## Assignment checklist
 
-Checked against the assignment PDF's own checklist (section 8), honestly — including the two
-items blocked by external factors rather than code gaps:
+Checked against the assignment PDF's own checklist (section 8), honestly — including the one
+item still blocked by an external factor rather than a code gap:
 
 | # | Item | Status |
 |---|---|---|
-| 1 | Sandbox WhatsApp set up + test phone added | ❌ Blocked — see [Known limitations](#known-limitations) |
+| 1 | Sandbox WhatsApp set up + test phone added | ✅ Done — real sandbox app, real test number, verified with actual delivered messages |
 | 2 | Postmark free account + sender verified | ❌ Blocked — see [Known limitations](#known-limitations) |
 | 3 | Web Push free account + browser subscribed | ✅ Done — verified on real Windows, mobile, and Linux devices |
 | 4 | Django backend built and deployed on Render | ✅ Done |
 | 5 | Frontend + admin panel built and deployed on Vercel | ✅ Done |
-| 6 | At least 2 triggers with all 3 channels working | ⚠️ Partial — Login + Logout are both wired to all 3 channels in code; only Web Push is provably working end-to-end because of #1/#2 |
-| 7 | Task A — one trigger, all 3 channels tested | ⚠️ Partial — same reason as #6 |
-| 8 | Task B — second trigger, all 3 channels tested | ⚠️ Partial — same reason as #6 |
+| 6 | At least 2 triggers with all 3 channels working | ⚠️ Partial — Login + Logout both have working WhatsApp and Web Push, verified end-to-end; only Email is blocked by #2 |
+| 7 | Task A — one trigger, all 3 channels tested | ⚠️ Partial — Login's WhatsApp and Web Push are both proven; Email is blocked by #2 |
+| 8 | Task B — second trigger, all 3 channels tested | ⚠️ Partial — same as #7, for Logout |
 | 9 | Task C — edited template + used toggle | ✅ Done — template edited and re-tested repeatedly; the toggle is a simple boolean gate before the send call, proven by every working send requiring it to be on |
 | 10 | Task D — can explain triggers and channels | ✅ Done — see [Task D](#task-d--plain-language-answers) |
 | 11 | GitHub + live URLs submitted | ✅ Done |
 
-**6 of 11 fully done, 2 are external blockers (not code gaps — both adapters are built and would
-work the moment real credentials exist), and the remaining 3 are partial purely as a direct
-consequence of those two.**
+**7 of 11 fully done, 1 external blocker (Postmark — not a code gap, the adapter is built and
+would work the moment a verified sender exists), and the remaining 3 are partial purely as a
+direct consequence of that one blocker.**
 
 ## What's actually done right now
 
@@ -48,7 +48,7 @@ consequence of those two.**
 | Frontend (design system, admin panel, website pages, auth guard) | ✅ Built and verified, redesigned once for real senior-level polish (see `TODO.md` history) |
 | **Web Push (OneSignal)** | ✅ **Fully configured and verified working end to end** — real browser push notification received on login |
 | Email (Postmark) | ⚠️ Code complete and adapter-tested against the real API shape; **sandbox account not yet approved** — see [Known limitations](#known-limitations) |
-| WhatsApp (Cloud API) | ⚠️ Code complete; **sandbox not yet configured** — see [Known limitations](#known-limitations) |
+| **WhatsApp (Cloud API)** | ✅ **Fully configured and verified working** — real WhatsApp messages delivered for both Login and Logout |
 | Deployment | ✅ **Live** — backend on Render, frontend on Vercel (see [Submission](#submission) for URLs) |
 
 ## How to log in as admin
@@ -236,17 +236,21 @@ it, this is the channel to show.
 
 ### WhatsApp (Cloud API)
 
-**Status: not configured** — both issues below were actually hit while trying to set this up, not
-hypothetical risks. `WHATSAPP_ACCESS_TOKEN`/`PHONE_NUMBER_ID` are unset; the code path is built and
-adapter-tested against the real API shape, but never exercised against a live sandbox.
+**Status: configured and verified working.** The first two setup attempts (documented below for
+transparency, since they're real friction candidates should expect) failed on external Meta-side
+issues; a third attempt using an existing, older Facebook account got through cleanly. Both
+required triggers (Login and Logout) send real WhatsApp messages via Meta's default pre-approved
+`hello_world` template, confirmed by actually receiving them — not just a 2xx from the API.
 
-- **Hit a "try again in about an hour" cooldown during app configuration** on the first attempt,
-  with no further detail given — a generic Meta-side rate-limit/lockout, not something caused by a
+- **First attempt hit a "try again in about an hour" cooldown** during app configuration, with no
+  further detail given — a generic Meta-side rate-limit/lockout, not something caused by a
   specific misconfigured setting.
-- **Creating a second account to work around that hit a different, known Meta gate**: "your
+- **Creating a second (new) account to work around that hit a different, known Meta gate**: "your
   account is too new" when trying to create a Business Portfolio — a genuine Meta anti-abuse
   restriction tied to account age, not a setup mistake. Clears on its own, typically within a few
-  hours to a few days, but there wasn't enough runway left in the assignment window to wait it out.
+  hours to a few days.
+- **Using a third, pre-existing account (not freshly created) avoided both issues entirely** — the
+  restrictions above are scoped to the account/app, not to the project or the developer.
 - **Sandbox is capped at 5 recipient phone numbers total.** Each one must be manually added in the
   Meta App dashboard (WhatsApp → API Setup → *Manage phone number list*), and the number's owner has
   to enter a verification code sent to them via WhatsApp before they can receive test messages.
@@ -255,8 +259,9 @@ adapter-tested against the real API shape, but never exercised against a live sa
   **Practically**: this channel can only be demonstrated to numbers you've explicitly added and
   verified yourself (or live, with the viewer's participation) — not asynchronously to a stranger's
   number.
-- The temporary access token from Meta's API Setup panel is short-lived (~1-2h) — expect to
-  regenerate it periodically while testing.
+- The temporary access token from Meta's API Setup panel is short-lived (Meta doesn't publish an
+  exact figure — expect it to expire within hours, not days) — if a send suddenly fails with an
+  auth error, regenerate it from the same panel.
 
 ## Task D — plain-language answers
 
